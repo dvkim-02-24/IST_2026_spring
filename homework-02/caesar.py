@@ -15,7 +15,11 @@ def encrypt_caesar(plaintext: str, shift: int = 3) -> str:
     ''
     """
     ciphertext = ""
-    # PUT YOUR CODE HERE
+    shift = shift % 26
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    table = str.maketrans(lower + upper, lower[shift:] + lower[:shift] + upper[shift:] + upper[:shift])
+    return plaintext.translate(table)
     return ciphertext
 
 
@@ -33,7 +37,7 @@ def decrypt_caesar(ciphertext: str, shift: int = 3) -> str:
     ''
     """
     plaintext = ""
-    # PUT YOUR CODE HERE
+    plaintext = encrypt_caesar(ciphertext, -shift)
     return plaintext
 
 
@@ -42,5 +46,12 @@ def caesar_breaker_brute_force(ciphertext: str, dictionary: tp.Set[str]) -> int:
     Brute force breaking a Caesar cipher.
     """
     best_shift = 0
-    # PUT YOUR CODE HERE
+    max_matches = 0
+    for shift in range(26):
+        decrypted = decrypt_caesar(ciphertext, shift)
+        matches = sum(1 for word in decrypted.split() if word.lower() in dictionary)
+        if matches > max_matches:
+            max_matches = matches
+            best_shift = shift
+    return best_shift
     return best_shift
